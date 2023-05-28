@@ -114,75 +114,75 @@ class Board:
     # Create chessboard cells pattern
     def chess_board(self):
         #self.board = [[(i + j) % 2 for i in range(self.width)] for j in range(self.height)]
-        with open("board_1.json", "r") as file:
+        with open("patterns\\board_1.json", "r") as file:
             json_data = file.read()
         self.board = json.loads(json_data)
     
     # Create columns cells pattern
     def columns_board(self):
         #self.board = [[i % 2 for i in range(self.width)] for j in range(self.height)]
-        with open("board_2.json", "r") as file:
+        with open("patterns\\board_2.json", "r") as file:
             json_data = file.read()
         self.board = json.loads(json_data)
     
     # Create rows cells pattern
     def rows_board(self):
         #self.board = [[j % 2 for i in range(self.width)] for j in range(self.height)]
-        with open("board_3.json", "r") as file:
+        with open("patterns\\board_3.json", "r") as file:
             json_data = file.read()
         self.board = json.loads(json_data)
     
     # Create copperhead
     def copperhead_board(self):
-        with open("copperhead.json", "r") as file:
+        with open("patterns\\copperhead.json", "r") as file:
             json_data = file.read()
         self.board = json.loads(json_data)
     
     # Create Gosper Glider Gun
     def gosperglidergun_board(self):
-        with open("gosperglidergun.json", "r") as file:
+        with open("patterns\\gosperglidergun.json", "r") as file:
             json_data = file.read()
         self.board = json.loads(json_data)
     
     # Create Pulsar
     def pulsar_board(self):
-        with open("pulsar.json", "r") as file:
+        with open("patterns\\pulsar.json", "r") as file:
             json_data = file.read()
         self.board = json.loads(json_data)
     
     # Create Penta-decathlon
     def pentadecathlon_board(self):
-        with open("pentadecathlon.json", "r") as file:
+        with open("patterns\\pentadecathlon.json", "r") as file:
             json_data = file.read()
         self.board = json.loads(json_data)
     
     # Create Light Weight SpaceShip (LWSS)
     def LWSS_board(self):
-        with open("LWSS.json", "r") as file:
+        with open("patterns\\LWSS.json", "r") as file:
             json_data = file.read()
         self.board = json.loads(json_data)
     
     # Create Middle Weight SpaceShip (MWSS)
     def MWSS_board(self):
-        with open("MWSS.json", "r") as file:
+        with open("patterns\\MWSS.json", "r") as file:
             json_data = file.read()
         self.board = json.loads(json_data)
     
     # Create Heavy Weight SpaceShip (HWSS)
     def HWSS_board(self):
-        with open("HWSS.json", "r") as file:
+        with open("patterns\\HWSS.json", "r") as file:
             json_data = file.read()
         self.board = json.loads(json_data)
     
     # Create Cycled Gliders pattern
     def cycledgliders_board(self):
-        with open("cycledgliders.json", "r") as file:
+        with open("patterns\\cycledgliders.json", "r") as file:
             json_data = file.read()
         self.board = json.loads(json_data)
     
     # Save board into a file
     def save_board(self):
-        with open("board.json", "w", encoding="UTF-8") as file:
+        with open("patterns\\board.json", "w", encoding="UTF-8") as file:
             file.write("[\n")
             for i, sublist in enumerate(self.board):
                 file.write(json.dumps(sublist))
@@ -221,7 +221,7 @@ class Life(Board):
                     pygame.draw.rect(screen, pygame.Color("black"), 
                     (x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size, self.cell_size))
                 # Draw the outline of each cell
-                pygame.draw.rect(screen, pygame.Color(0, 0, 0),
+                pygame.draw.rect(screen, "#262626",
                 (x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size, self.cell_size), 1)
 
     # Calculate the next move
