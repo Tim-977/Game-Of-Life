@@ -3,12 +3,9 @@ import random
 import pygame
 
 #TODO:
-# ~~ Speed change
 # ~~ Play/Pause button
-# ~~ Random spawn
-# ~~ Board clear
 # ~~ Mouse hold
-# ~~ Patterns
+# ~~ Patterns (Objects)
 # ~~ New organisms...
 
 
@@ -65,10 +62,7 @@ class Board:
     def __init__(self, width, height, left=10, top=10, cell_size=30):
         self.width = width
         self.height = height
-        #self.board = [[0] * width for _ in range(height)]
-        #self.board = [[i % 2 for i in range(width)] for j in range(height)]
-        self.board = [[(i + j) % 2 for i in range(width)] for j in range(height)]
-        #self.board = [[random.randint(0, 1) for i in range(width)] for j in range(height)]
+        self.board = [[0] * width for _ in range(height)]
         self.left = 0  # Left margin
         self.top = 0  # Top margin
         self.cell_size = 0
@@ -110,6 +104,22 @@ class Board:
     # Kill all the cells
     def clear_board(self):
         self.board = [[0] * self.width for _ in range(self.height)]
+    
+    # Create random cells pattern
+    def random_board(self):
+        self.board = [[random.randint(0, 1) for i in range(self.width)] for j in range(self.height)]
+    
+    # Create chessboard cells pattern
+    def chess_board(self):
+        self.board = [[(i + j) % 2 for i in range(self.width)] for j in range(self.height)]
+    
+    # Create columns cells pattern
+    def columns_board(self):
+        self.board = [[i % 2 for i in range(self.width)] for j in range(self.height)]
+    
+    # Create rows cells pattern
+    def rows_board(self):
+        self.board = [[j % 2 for i in range(self.width)] for j in range(self.height)]
 
 
 class Life(Board):
@@ -161,22 +171,26 @@ class Life(Board):
 
 def main():
     pygame.init()
-    size = 1000, 600  # The size of the game window
+    size = 1000, 630  # The size of the game window
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     pygame.display.set_caption('The Game Of Life')
 
-    board = Life(75, 50, 10, 10, 10)  # Create a Life instance with specific dimensions
+    board = Life(75, 61, 10, 10, 10)  # Create a Life instance with specific dimensions
     # (width_cells, height_cells, left_margin=10, top_margin=10, cell_size=30)
 
     time_on = False
     ticks = 0  # Counter to control the speed of animation
-    speed = 15  # Initial speed value
+    speed = 10  # Initial speed value
 
-    text_speed_label = Label("Speed", (900, 15), "black", 34)
+    text_speed_label = Label("Delay", (900, 15), "black", 34)
     speed_label = Label(str(speed), (900, 90), "black", 70)
 
-    clear_button = Button(780, 10, 80, 30, "Clear", "#df1d28", "#8d0209", 30, board.clear_board)
+    clear_button = Button(780, 10, 80, 30, "Clear", "#df1d28", "#8d0209", 34, board.clear_board)
+    random_button = Button(780, 55, 80, 30, "Random", "#FC328D", "#70163F", 27, board.random_board)
+    chess_button = Button(780, 100, 80, 30, "Chess", "#262626", "#0D0D0D", 27, board.chess_board)
+    columns_button = Button(780, 145, 80, 30, "Columns", "#262626", "#0D0D0D", 25, board.columns_board)
+    rows_button = Button(780, 190, 80, 30, "Rows", "#262626", "#0D0D0D", 25, board.rows_board)
     speed_up_button = Button(900, 50, 70, 30, "NULL", "#23E016", "#10610A", 30, board.clear_board)
     speed_down_button = Button(900, 140, 70, 30, "NULL", "#1929E0", "#0B1261", 30, board.clear_board)
 
@@ -190,17 +204,21 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 board.get_click(event.pos)  # Handle left mouse button click
                 clear_button.handle_event(event)
+                random_button.handle_event(event)
+                chess_button.handle_event(event)
+                columns_button.handle_event(event)
+                rows_button.handle_event(event)
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE or event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 time_on = not time_on  # Toggle the animation state on spacebar press or right mouse button click
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 4:
-                speed -= 1  # Increase the animation speed on mouse wheel up
+                speed += 1 if speed < 99 else 0 # Increase the animation speed on mouse wheel up
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 5:
-                speed += 1  # Decrease the animation speed on mouse wheel down
+                speed -= 1 if not not speed else 0  # Decrease the animation speed on mouse wheel down
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_p:
                 mouse_pos = pygame.mouse.get_pos()
                 print(f"Mouse clicked at coordinates: {mouse_pos}")
         
-        speed_label.update(text=str((100 - speed) // 2))
+        speed_label.update(text=str(speed))
 
         screen.fill(('gray'))
         board.render(screen)
@@ -209,6 +227,10 @@ def main():
         text_speed_label.draw(screen)
 
         clear_button.draw(screen)
+        random_button.draw(screen)
+        chess_button.draw(screen)
+        columns_button.draw(screen)
+        rows_button.draw(screen)
         speed_up_button.draw(screen)
         speed_down_button.draw(screen)
 
