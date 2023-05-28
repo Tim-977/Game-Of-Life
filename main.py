@@ -3,7 +3,7 @@ import random
 import pygame
 
 #TODO:
-# ~~ Slider speed change
+# ~~ Speed change
 # ~~ Play/Pause button
 # ~~ Random spawn
 # ~~ Board clear
@@ -12,17 +12,41 @@ import pygame
 # ~~ New organisms...
 
 
+class Label:
+    def __init__(self, text, position, color, font):
+        self.text = text
+        self.position = position
+        self.color = color
+        self.font = font
+    
+    def update(self, text=None, position=None, color=None, font=None):
+        if text is not None:
+            self.text = text
+        if position is not None:
+            self.position = position
+        if color is not None:
+            self.color = color
+        if font is not None:
+            self.font = font
+
+    def draw(self, surface):
+        font = pygame.font.SysFont(None, self.font)
+        label_text = font.render(self.text, True, self.color)
+        surface.blit(label_text, self.position)
+
+
 class Button:
-    def __init__(self, x, y, width, height, text, color, hover_color, callback):
+    def __init__(self, x, y, width, height, text, color, hover_color, font, callback):
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
         self.color = color
         self.hover_color = hover_color
+        self.font = font
         self.callback = callback
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.hover_color if self.is_hovered() else self.color, self.rect)
-        font = pygame.font.Font(None, 20)
+        font = pygame.font.Font(None, self.font)
         text = font.render(self.text, True, (255, 255, 255))
         text_rect = text.get_rect(center=self.rect.center)
         screen.blit(text, text_rect)
@@ -149,7 +173,13 @@ def main():
     ticks = 0  # Counter to control the speed of animation
     speed = 15  # Initial speed value
 
-    clear_button = Button(780, 10, 80, 30, "Clear", "#df1d28", "#8d0209", board.clear_board)
+    text_speed_label = Label("Speed", (900, 15), "black", 34)
+    speed_label = Label(str(speed), (900, 90), "black", 70)
+
+    clear_button = Button(780, 10, 80, 30, "Clear", "#df1d28", "#8d0209", 30, board.clear_board)
+    speed_up_button = Button(900, 50, 70, 30, "NULL", "#23E016", "#10610A", 30, board.clear_board)
+    speed_down_button = Button(900, 140, 70, 30, "NULL", "#1929E0", "#0B1261", 30, board.clear_board)
+
 
     running = True
 
@@ -163,16 +193,26 @@ def main():
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE or event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 time_on = not time_on  # Toggle the animation state on spacebar press or right mouse button click
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 4:
-                speed += 1  # Increase the animation speed on mouse wheel up
+                speed -= 1  # Increase the animation speed on mouse wheel up
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 5:
-                speed -= 1  # Decrease the animation speed on mouse wheel down
+                speed += 1  # Decrease the animation speed on mouse wheel down
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_p:
                 mouse_pos = pygame.mouse.get_pos()
                 print(f"Mouse clicked at coordinates: {mouse_pos}")
+        
+        speed_label.update(text=str((100 - speed) // 2))
 
         screen.fill(('gray'))
         board.render(screen)
+
+        speed_label.draw(screen)
+        text_speed_label.draw(screen)
+
         clear_button.draw(screen)
+        speed_up_button.draw(screen)
+        speed_down_button.draw(screen)
+
+        pygame.draw.rect(screen, "black", (890, 10, 90, 170), 1)
 
         if ticks >= speed:
             if time_on:
