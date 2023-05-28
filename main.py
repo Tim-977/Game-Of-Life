@@ -1,10 +1,11 @@
+import json
 import random
 
 import pygame
 
 #TODO:
 # ~~ Mouse hold
-# ~~ Patterns (Objects) ~~ 50%
+# ~~ Rules interpritation
 # ~~ New organisms...
 
 
@@ -112,15 +113,91 @@ class Board:
     
     # Create chessboard cells pattern
     def chess_board(self):
-        self.board = [[(i + j) % 2 for i in range(self.width)] for j in range(self.height)]
+        #self.board = [[(i + j) % 2 for i in range(self.width)] for j in range(self.height)]
+        with open("board_1.json", "r") as file:
+            json_data = file.read()
+        self.board = json.loads(json_data)
     
     # Create columns cells pattern
     def columns_board(self):
-        self.board = [[i % 2 for i in range(self.width)] for j in range(self.height)]
+        #self.board = [[i % 2 for i in range(self.width)] for j in range(self.height)]
+        with open("board_2.json", "r") as file:
+            json_data = file.read()
+        self.board = json.loads(json_data)
     
     # Create rows cells pattern
     def rows_board(self):
-        self.board = [[j % 2 for i in range(self.width)] for j in range(self.height)]
+        #self.board = [[j % 2 for i in range(self.width)] for j in range(self.height)]
+        with open("board_3.json", "r") as file:
+            json_data = file.read()
+        self.board = json.loads(json_data)
+    
+    # Create copperhead
+    def copperhead_board(self):
+        with open("copperhead.json", "r") as file:
+            json_data = file.read()
+        self.board = json.loads(json_data)
+    
+    # Create Gosper Glider Gun
+    def gosperglidergun_board(self):
+        with open("gosperglidergun.json", "r") as file:
+            json_data = file.read()
+        self.board = json.loads(json_data)
+    
+    # Create Pulsar
+    def pulsar_board(self):
+        with open("pulsar.json", "r") as file:
+            json_data = file.read()
+        self.board = json.loads(json_data)
+    
+    # Create Penta-decathlon
+    def pentadecathlon_board(self):
+        with open("pentadecathlon.json", "r") as file:
+            json_data = file.read()
+        self.board = json.loads(json_data)
+    
+    # Create Light Weight SpaceShip (LWSS)
+    def LWSS_board(self):
+        with open("LWSS.json", "r") as file:
+            json_data = file.read()
+        self.board = json.loads(json_data)
+    
+    # Create Middle Weight SpaceShip (MWSS)
+    def MWSS_board(self):
+        with open("MWSS.json", "r") as file:
+            json_data = file.read()
+        self.board = json.loads(json_data)
+    
+    # Create Heavy Weight SpaceShip (HWSS)
+    def HWSS_board(self):
+        with open("HWSS.json", "r") as file:
+            json_data = file.read()
+        self.board = json.loads(json_data)
+    
+    # Create Cycled Gliders pattern
+    def cycledgliders_board(self):
+        with open("cycledgliders.json", "r") as file:
+            json_data = file.read()
+        self.board = json.loads(json_data)
+    
+    # Save board into a file
+    def save_board(self):
+        with open("board.json", "w", encoding="UTF-8") as file:
+            file.write("[\n")
+            for i, sublist in enumerate(self.board):
+                file.write(json.dumps(sublist))
+                if i != len(self.board) - 1:
+                    file.write(",\n")
+                else:
+                    file.write("\n")
+            file.write("]")
+   
+    # -- For debug --
+    #def load_board(self):
+    #    with open("board.json", "r") as file:
+    #        json_data = file.read()
+    #    self.board = json.loads(json_data)
+    #    print('NEW')
 
 
 class Life(Board):
@@ -172,11 +249,11 @@ class Life(Board):
 
 def add_delay():
     global speed
-    speed += 1
+    speed += 1 if speed < 99 else 0
 
 def reduce_delay():
     global speed
-    speed -= 1
+    speed -= 1 if not not speed else 0
 
 def speed_reset():
     global speed
@@ -197,6 +274,8 @@ def main():
     pygame.display.set_caption('The Game Of Life')
 
     board = Life(75, 61, 10, 10, 10)  # Create a Life instance with specific dimensions
+    #board = Life(20, 20, 10, 10, 30)  # Create a Life instance with specific dimensions
+
     # (width_cells, height_cells, left_margin=10, top_margin=10, cell_size=30)
     time_on = False
     ticks = 0  # Counter to control the speed of animation
@@ -215,14 +294,14 @@ def main():
     speed_reset_button = Button(890, 190, 90, 30, "Reset", "#EB7517", "#61310A", 30, speed_reset)
     pause_play_button = Button(890, 235, 90, 30, "Pause/Play", "#F01406", "#700A02", 24, pause_play)
 
-    button_1 = Button(790 + 37 * 0 + 0, 530, 37, 37, "1", "#1C1C1C", "#000000", 35, board.clear_board)
-    button_2 = Button(790 + 37 * 1 + 10, 530, 37, 37, "2", "#1C1C1C", "#000000", 35, board.clear_board)
-    button_3 = Button(790 + 37 * 2 + 20, 530, 37, 37, "3", "#1C1C1C", "#000000", 35, board.clear_board)
-    button_4 = Button(790 + 37 * 3 + 30, 530, 37, 37, "4", "#1C1C1C", "#000000", 35, board.clear_board)
-    button_5 = Button(790 + 37 * 0 + 0, 577, 37, 37, "5", "#1C1C1C", "#000000", 35, board.clear_board)
-    button_6 = Button(790 + 37 * 1 + 10, 577, 37, 37, "6", "#1C1C1C", "#000000", 35, board.clear_board)
-    button_7 = Button(790 + 37 * 2 + 20, 577, 37, 37, "7", "#1C1C1C", "#000000", 35, board.clear_board)
-    button_8 = Button(790 + 37 * 3 + 30, 577, 37, 37, "8", "#1C1C1C", "#000000", 35, board.clear_board)
+    button_1 = Button(790 + 37 * 0 + 0, 530, 37, 37, "1", "#1C1C1C", "#000000", 35, board.copperhead_board)
+    button_2 = Button(790 + 37 * 1 + 10, 530, 37, 37, "2", "#1C1C1C", "#000000", 35, board.gosperglidergun_board)
+    button_3 = Button(790 + 37 * 2 + 20, 530, 37, 37, "3", "#1C1C1C", "#000000", 35, board.pulsar_board)
+    button_4 = Button(790 + 37 * 3 + 30, 530, 37, 37, "4", "#1C1C1C", "#000000", 35, board.pentadecathlon_board)
+    button_5 = Button(790 + 37 * 0 + 0, 577, 37, 37, "5", "#1C1C1C", "#000000", 35, board.LWSS_board)
+    button_6 = Button(790 + 37 * 1 + 10, 577, 37, 37, "6", "#1C1C1C", "#000000", 35, board.MWSS_board)
+    button_7 = Button(790 + 37 * 2 + 20, 577, 37, 37, "7", "#1C1C1C", "#000000", 35, board.HWSS_board)
+    button_8 = Button(790 + 37 * 3 + 30, 577, 37, 37, "8", "#1C1C1C", "#000000", 35, board.cycledgliders_board)
 
 
     running = True
@@ -242,6 +321,14 @@ def main():
                 speed_down_button.handle_event(event)
                 speed_reset_button.handle_event(event)
                 pause_play_button.handle_event(event)
+                button_1.handle_event(event)
+                button_2.handle_event(event)
+                button_3.handle_event(event)
+                button_4.handle_event(event)
+                button_5.handle_event(event)
+                button_6.handle_event(event)
+                button_7.handle_event(event)
+                button_8.handle_event(event)
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE or event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 time_on = not time_on  # Toggle the animation state on spacebar press or right mouse button click
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 4:
@@ -249,8 +336,14 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 5:
                 speed -= 1 if not not speed else 0  # Decrease the animation speed on mouse wheel down
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_p:
-                mouse_pos = pygame.mouse.get_pos()
+                mouse_pos = pygame.mouse.get_pos() # Get mouse coords (--debug)
                 print(f"Mouse clicked at coordinates: {mouse_pos}")
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_w:
+                board.save_board() # Save the board into the file
+                print('Saved')
+            #elif event.type == pygame.KEYDOWN and event.key == pygame.K_l:
+            #    board.load_board() # Load the board
+            #    print('Loaded')
         
         speed_label.update(text=str(speed))
 
