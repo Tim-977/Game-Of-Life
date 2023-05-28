@@ -5,11 +5,12 @@ import pygame
 #TODO:
 # ~~ Play/Pause button
 # ~~ Mouse hold
-# ~~ Patterns (Objects)
+# ~~ Patterns (Objects) ~~ 50%
 # ~~ New organisms...
 
 
 class Label:
+
     def __init__(self, text, position, color, font):
         self.text = text
         self.position = position
@@ -33,6 +34,7 @@ class Label:
 
 
 class Button:
+
     def __init__(self, x, y, width, height, text, color, hover_color, font, callback):
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
@@ -191,8 +193,18 @@ def main():
     chess_button = Button(780, 100, 80, 30, "Chess", "#262626", "#0D0D0D", 27, board.chess_board)
     columns_button = Button(780, 145, 80, 30, "Columns", "#262626", "#0D0D0D", 25, board.columns_board)
     rows_button = Button(780, 190, 80, 30, "Rows", "#262626", "#0D0D0D", 25, board.rows_board)
-    speed_up_button = Button(900, 50, 70, 30, "NULL", "#23E016", "#10610A", 30, board.clear_board)
-    speed_down_button = Button(900, 140, 70, 30, "NULL", "#1929E0", "#0B1261", 30, board.clear_board)
+    speed_up_button = Button(900, 50, 70, 30, "Faster", "#23E016", "#10610A", 30, board.clear_board)
+    speed_down_button = Button(900, 140, 70, 30, "Slower", "#1929E0", "#0B1261", 28, board.clear_board)
+    pause_button = Button(890, 190, 90, 30, "PLAY", "#F01406", "#700A02", 35, board.clear_board)
+
+    button_1 = Button(790 + 37 * 0 + 0, 530, 37, 37, "1", "#1C1C1C", "#000000", 35, board.clear_board)
+    button_2 = Button(790 + 37 * 1 + 10, 530, 37, 37, "2", "#1C1C1C", "#000000", 35, board.clear_board)
+    button_3 = Button(790 + 37 * 2 + 20, 530, 37, 37, "3", "#1C1C1C", "#000000", 35, board.clear_board)
+    button_4 = Button(790 + 37 * 3 + 30, 530, 37, 37, "4", "#1C1C1C", "#000000", 35, board.clear_board)
+    button_5 = Button(790 + 37 * 0 + 0, 577, 37, 37, "5", "#1C1C1C", "#000000", 35, board.clear_board)
+    button_6 = Button(790 + 37 * 1 + 10, 577, 37, 37, "6", "#1C1C1C", "#000000", 35, board.clear_board)
+    button_7 = Button(790 + 37 * 2 + 20, 577, 37, 37, "7", "#1C1C1C", "#000000", 35, board.clear_board)
+    button_8 = Button(790 + 37 * 3 + 30, 577, 37, 37, "8", "#1C1C1C", "#000000", 35, board.clear_board)
 
 
     running = True
@@ -233,8 +245,19 @@ def main():
         rows_button.draw(screen)
         speed_up_button.draw(screen)
         speed_down_button.draw(screen)
+        pause_button.draw(screen)
 
-        pygame.draw.rect(screen, "black", (890, 10, 90, 170), 1)
+        button_1.draw(screen)
+        button_2.draw(screen)
+        button_3.draw(screen)
+        button_4.draw(screen)
+        button_5.draw(screen)
+        button_6.draw(screen)
+        button_7.draw(screen)
+        button_8.draw(screen)
+
+        pygame.draw.rect(screen, "black", (890, 10, 90, 170), 4)
+        pygame.draw.rect(screen, "black", (780, 520, 198, 104), 4)
 
         if ticks >= speed:
             if time_on:
