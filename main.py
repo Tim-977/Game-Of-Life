@@ -3,7 +3,6 @@ import random
 import pygame
 
 #TODO:
-# ~~ Play/Pause button
 # ~~ Mouse hold
 # ~~ Patterns (Objects) ~~ 50%
 # ~~ New organisms...
@@ -171,7 +170,26 @@ class Life(Board):
         self.board = new_board[:]
 
 
+def add_delay():
+    global speed
+    speed += 1
+
+def reduce_delay():
+    global speed
+    speed -= 1
+
+def speed_reset():
+    global speed
+    speed = 5
+
+def pause_play():
+    global time_on
+    time_on = not time_on
+
 def main():
+    global speed
+    global time_on
+
     pygame.init()
     size = 1000, 630  # The size of the game window
     screen = pygame.display.set_mode(size)
@@ -180,10 +198,9 @@ def main():
 
     board = Life(75, 61, 10, 10, 10)  # Create a Life instance with specific dimensions
     # (width_cells, height_cells, left_margin=10, top_margin=10, cell_size=30)
-
     time_on = False
     ticks = 0  # Counter to control the speed of animation
-    speed = 10  # Initial speed value
+    speed = 5  # Initial speed value
 
     text_speed_label = Label("Delay", (900, 15), "black", 34)
     speed_label = Label(str(speed), (900, 90), "black", 70)
@@ -193,9 +210,10 @@ def main():
     chess_button = Button(780, 100, 80, 30, "Chess", "#262626", "#0D0D0D", 27, board.chess_board)
     columns_button = Button(780, 145, 80, 30, "Columns", "#262626", "#0D0D0D", 25, board.columns_board)
     rows_button = Button(780, 190, 80, 30, "Rows", "#262626", "#0D0D0D", 25, board.rows_board)
-    speed_up_button = Button(900, 50, 70, 30, "Faster", "#23E016", "#10610A", 30, board.clear_board)
-    speed_down_button = Button(900, 140, 70, 30, "Slower", "#1929E0", "#0B1261", 28, board.clear_board)
-    pause_button = Button(890, 190, 90, 30, "PLAY", "#F01406", "#700A02", 35, board.clear_board)
+    speed_up_button = Button(900, 50, 70, 30, "More", "#23E016", "#10610A", 30, add_delay)
+    speed_down_button = Button(900, 140, 70, 30, "Less", "#1929E0", "#0B1261", 28, reduce_delay)
+    speed_reset_button = Button(890, 190, 90, 30, "Reset", "#EB7517", "#61310A", 30, speed_reset)
+    pause_play_button = Button(890, 235, 90, 30, "Pause/Play", "#F01406", "#700A02", 24, pause_play)
 
     button_1 = Button(790 + 37 * 0 + 0, 530, 37, 37, "1", "#1C1C1C", "#000000", 35, board.clear_board)
     button_2 = Button(790 + 37 * 1 + 10, 530, 37, 37, "2", "#1C1C1C", "#000000", 35, board.clear_board)
@@ -220,6 +238,10 @@ def main():
                 chess_button.handle_event(event)
                 columns_button.handle_event(event)
                 rows_button.handle_event(event)
+                speed_up_button.handle_event(event)
+                speed_down_button.handle_event(event)
+                speed_reset_button.handle_event(event)
+                pause_play_button.handle_event(event)
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE or event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 time_on = not time_on  # Toggle the animation state on spacebar press or right mouse button click
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 4:
@@ -245,7 +267,8 @@ def main():
         rows_button.draw(screen)
         speed_up_button.draw(screen)
         speed_down_button.draw(screen)
-        pause_button.draw(screen)
+        speed_reset_button.draw(screen)
+        pause_play_button.draw(screen)
 
         button_1.draw(screen)
         button_2.draw(screen)
@@ -264,7 +287,7 @@ def main():
                 board.next_move()  # Calculate and apply the next move if enough time has passed
             ticks = 0
         pygame.display.flip()
-        clock.tick(100)
+        clock.tick(120)
         ticks += 1
     pygame.quit()
 
