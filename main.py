@@ -1,4 +1,39 @@
+import random
+
 import pygame
+
+#TODO:
+# ~~ Slider speed change
+# ~~ Play/Pause button
+# ~~ Random spawn
+# ~~ Board clear
+# ~~ Mouse hold
+# ~~ Patterns
+# ~~ New organisms...
+
+
+class Button:
+    def __init__(self, x, y, width, height, text, color, hover_color, callback):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.text = text
+        self.color = color
+        self.hover_color = hover_color
+        self.callback = callback
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.hover_color if self.is_hovered() else self.color, self.rect)
+        font = pygame.font.Font(None, 20)
+        text = font.render(self.text, True, (255, 255, 255))
+        text_rect = text.get_rect(center=self.rect.center)
+        screen.blit(text, text_rect)
+
+    def is_hovered(self):
+        return self.rect.collidepoint(pygame.mouse.get_pos())
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.is_hovered():
+                self.callback()
 
 
 class Board:
@@ -6,7 +41,10 @@ class Board:
     def __init__(self, width, height, left=10, top=10, cell_size=30):
         self.width = width
         self.height = height
-        self.board = [[0] * width for _ in range(height)]
+        #self.board = [[0] * width for _ in range(height)]
+        #self.board = [[i % 2 for i in range(width)] for j in range(height)]
+        self.board = [[(i + j) % 2 for i in range(width)] for j in range(height)]
+        #self.board = [[random.randint(0, 1) for i in range(width)] for j in range(height)]
         self.left = 0  # Left margin
         self.top = 0  # Top margin
         self.cell_size = 0
@@ -44,6 +82,10 @@ class Board:
         cell = self.get_cell(mouse_pos)
         if cell:
             self.on_click(cell)
+    
+    # Kill all the cells
+    def clear_board(self):
+        self.board = [[0] * self.width for _ in range(self.height)]
 
 
 class Life(Board):
@@ -100,12 +142,14 @@ def main():
     clock = pygame.time.Clock()
     pygame.display.set_caption('The Game Of Life')
 
-    board = Life(20, 20, 10, 10, 25)  # Create a Life instance with specific dimensions
+    board = Life(75, 50, 10, 10, 10)  # Create a Life instance with specific dimensions
     # (width_cells, height_cells, left_margin=10, top_margin=10, cell_size=30)
 
     time_on = False
     ticks = 0  # Counter to control the speed of animation
-    speed = 30  # Initial speed value
+    speed = 15  # Initial speed value
+
+    clear_button = Button(780, 10, 80, 30, "Clear", "#df1d28", "#8d0209", board.clear_board)
 
     running = True
 
@@ -113,17 +157,23 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False  # Exit the game loop if the window is closed
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 board.get_click(event.pos)  # Handle left mouse button click
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE or event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
+                clear_button.handle_event(event)
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE or event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 time_on = not time_on  # Toggle the animation state on spacebar press or right mouse button click
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 4:
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 4:
                 speed += 1  # Increase the animation speed on mouse wheel up
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 5:
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 5:
                 speed -= 1  # Decrease the animation speed on mouse wheel down
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_p:
+                mouse_pos = pygame.mouse.get_pos()
+                print(f"Mouse clicked at coordinates: {mouse_pos}")
 
         screen.fill(('gray'))
         board.render(screen)
+        clear_button.draw(screen)
+
         if ticks >= speed:
             if time_on:
                 board.next_move()  # Calculate and apply the next move if enough time has passed
