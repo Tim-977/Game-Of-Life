@@ -3,10 +3,6 @@ import random
 
 import pygame
 
-#TODO:
-# ~~ Mouse hold
-# ~~ New organisms...
-
 
 class Label:
 
@@ -173,7 +169,7 @@ class Board:
             json_data = file.read()
         self.board = json.loads(json_data)
     
-    # Create Cycled Gliders pattern
+    # Create 106P135 pattern
     def cycledgliders_board(self):
         with open("patterns\\cycledgliders.json", "r") as file:
             json_data = file.read()
@@ -282,16 +278,20 @@ def main():
     global speed
     global time_on
 
+    WIDTH_cells = 75
+    HEIGHT_cells = 61
+    LEFT_MARGIN = 10
+    TOP_MARGIN = 10
+    CELL_SIZE = 10
+
     pygame.init()
     size = 1000, 630  # The size of the game window
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     pygame.display.set_caption('The Game Of Life')
 
-    board = Life(75, 61, 10, 10, 10)  # Create a Life instance with specific dimensions
-    #board = Life(20, 20, 10, 10, 30)  # Create a Life instance with specific dimensions
+    board = Life(WIDTH_cells, HEIGHT_cells, LEFT_MARGIN, TOP_MARGIN, CELL_SIZE)  # Create a Life instance with specific dimensions
 
-    # (width_cells, height_cells, left_margin=10, top_margin=10, cell_size=30)
     time_on = False
     ticks = 0  # Counter to control the speed of animation
     speed = 5  # Initial speed value
