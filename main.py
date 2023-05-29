@@ -5,8 +5,21 @@ import pygame
 
 #TODO:
 # ~~ Mouse hold
-# ~~ Rules interpritation
 # ~~ New organisms...
+
+def extract_numbers(st):
+    b_index, s_index = st.index('B') + 1, st.index('S') + 1
+    b_number, s_number = '', ''
+
+    while b_index < len(st) and st[b_index].isdigit():
+        b_number += st[b_index]
+        b_index += 1
+
+    while s_index < len(st) and st[s_index].isdigit():
+        s_number += st[s_index]
+        s_index += 1
+
+    return b_number, s_number
 
 
 class Label:
@@ -238,10 +251,12 @@ class Life(Board):
                             continue
                         s += self.board[y + dy][x + dx]  # Add the state of the neighbor cell
                 s -= self.board[y][x]  # Subtract the state of the current cell
-                # Rules: B3/S23
-                if s == 3:
+
+                RULES = "B3/S23"
+                born, survive = extract_numbers(RULES)
+                if str(s) in born:
                     new_board[y][x] = 1
-                elif s < 2 or s > 3:
+                elif str(s) not in survive:
                     new_board[y][x] = 0
 
         self.board = new_board[:]
