@@ -87,8 +87,8 @@ You can follow these steps:
 ## Credits
 
 This project was created by Tim-977. 
->[GitHub](https://github.com/Tim-977) |
->[Telegram](https://t.me/timbrzm) |
+>[GitHub](https://github.com/Tim-977)
+>[Telegram](https://t.me/timbrzm)
 >[Discord](https://discord.com/users/618793085735927808)
 
 ## *Have fun exploring the fascinating world of the Game of Life!*
