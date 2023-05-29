@@ -7,20 +7,6 @@ import pygame
 # ~~ Mouse hold
 # ~~ New organisms...
 
-def extract_numbers(st):
-    b_index, s_index = st.index('B') + 1, st.index('S') + 1
-    b_number, s_number = '', ''
-
-    while b_index < len(st) and st[b_index].isdigit():
-        b_number += st[b_index]
-        b_index += 1
-
-    while s_index < len(st) and st[s_index].isdigit():
-        s_number += st[s_index]
-        s_index += 1
-
-    return b_number, s_number
-
 
 class Label:
 
@@ -252,8 +238,8 @@ class Life(Board):
                         s += self.board[y + dy][x + dx]  # Add the state of the neighbor cell
                 s -= self.board[y][x]  # Subtract the state of the current cell
 
-                RULES = "B3/S23"
-                born, survive = extract_numbers(RULES)
+                RULE = "B3/S23"
+                born, survive = extract_numbers(RULE)
                 if str(s) in born:
                     new_board[y][x] = 1
                 elif str(s) not in survive:
@@ -261,6 +247,20 @@ class Life(Board):
 
         self.board = new_board[:]
 
+
+def extract_numbers(st):
+    b_index, s_index = st.index('B') + 1, st.index('S') + 1
+    b_number, s_number = '', ''
+
+    while b_index < len(st) and st[b_index].isdigit():
+        b_number += st[b_index]
+        b_index += 1
+
+    while s_index < len(st) and st[s_index].isdigit():
+        s_number += st[s_index]
+        s_index += 1
+
+    return b_number, s_number
 
 def add_delay():
     global speed
